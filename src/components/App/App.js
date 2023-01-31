@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import toast, { Toaster } from 'react-hot-toast';
 import getImages from 'components/Api';
 import Searchbar from "components/Searchbar";
 import ImageGallery from "components/ImageGallery";
@@ -21,19 +22,29 @@ export default class App extends Component {
     searchImg: '2',
   };
 
-  formSubmitHandler = searchQuery =>{
-     this.setState({
-     page: 1,
-     searchImg: Object.values(searchQuery),
-     images: [],
-     })
+  // formSubmitHandler = searchQuery =>{
+  //   this.setState({
+  //     images: [],
+  //     page: 1,
+  //     searchImg: searchQuery,
+  //   });
     // e.target.reset();
     // console.log(data)
-    console.log(Object.values(searchQuery))
+
+
+  formSubmitHandler = searchQuery => {
+    this.setState({
+      page: 1,
+      images: [],
+      searchImg: searchQuery,
+    });
     console.log(searchQuery)
     console.log(this.state.searchImg)
+  };
 
-  }
+
+
+
 
 render () {
     return ( 
@@ -43,11 +54,11 @@ render () {
 <ImageGallery images={this.state.images}/>
 
     <button>LoadMore</button>
+    <Toaster autoClose={3000}/>
   </div>
 
-  
 
      );
   }
 }
- 
+ //

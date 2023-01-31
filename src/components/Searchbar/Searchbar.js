@@ -1,5 +1,7 @@
  import React, {Component} from "react";
  import PropTypes from 'prop-types';
+//  import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 
 
  export default class Searchbar extends Component {
@@ -9,8 +11,15 @@
 
      handleSubmit = e =>{
         e.preventDefault();
-        this.props.onSubmit(this.state)
-      }
+
+        if (this.state.searchQuery.trim() === '') {
+          toast.error('🦄 Wow so easy!');
+          return;
+        }
+        this.props.onSubmit(this.state.searchQuery);
+        this.setState({ searchQuery: '' });
+        console.log(this.state.searchQuery);
+     }
     
 
      handleChangeInput = e => {
