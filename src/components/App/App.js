@@ -3,6 +3,10 @@ import toast, { Toaster } from 'react-hot-toast';
 import getImages from 'components/Api';
 import Searchbar from "components/Searchbar";
 import ImageGallery from "components/ImageGallery";
+import Button from "components/Button";
+import { Wrapper } from './App.styled'
+
+
 // import { nanoid } from 'nanoid'
 // import ContactList from 'components/ContactList';
 // import ContactForm from 'components/ContactForm';
@@ -13,32 +17,44 @@ import ImageGallery from "components/ImageGallery";
 export default class App extends Component {
   state ={
     images: [],
-    page: 1,
     searchImg: '',
+    page: 1,
   };
 
-  formSubmitHandler = searchQuery => {
+  handleFormSubmit = searchQuery => {
     this.setState({
       page: 1,
       images: [],
       searchImg: searchQuery,
     });
-
   };
+
+  handleOnClickMoreButton = e => {
+    e.preventDefault();
+    this.setState( prevState => ({
+    page: prevState.page + 1
+    })  )
+  }
+
 
   render () {
       return ( 
-    <div>
-  <Searchbar onSubmit={this.formSubmitHandler}/>
+    
+      <Wrapper>
+      <Searchbar onSubmit={this.handleFormSubmit}/>
 
-  <ImageGallery 
-    images={this.state.images} 
-    searchImg={this.state.searchImg}/>
+<ImageGallery 
+  images={this.state.images} 
+  searchImg={this.state.searchImg}
+  page = {this.state.page}
+/>
 
-  <button>LoadMore</button>
+<Button onClick = {this.handleOnClickMoreButton}>LoadMore</Button>
 
-  <Toaster autoClose={3000}/>
-    </div>
+<Toaster autoClose={3000}/>
+      </Wrapper>
+
+    
       );
     }
   }

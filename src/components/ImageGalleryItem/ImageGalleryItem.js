@@ -1,11 +1,12 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import { GalleryImage, GalleryItem } from "./ImageGalleryItem.styled";
 
-const ImageGalleryItem = ({id, smallImage, largeImage}) => {
+const ImageGalleryItem = ({smallImage, largeImage}) => {
     return (
-        <li className="gallery-item">
-        <img src={smallImage} alt="small" />
-      </li>
+      <GalleryItem className="gallery-item">
+        <GalleryImage src={smallImage} alt="small" />
+      </GalleryItem>
     )
 }
 

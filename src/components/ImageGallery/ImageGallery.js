@@ -1,7 +1,8 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import getImages from 'components/Api';
+import fetchImages from 'components/Api';
 import ImageGalleryItem from 'components/ImageGalleryItem';
+import { Gallery } from './ImageGallery.styled';
 
 
 
@@ -9,37 +10,39 @@ import ImageGalleryItem from 'components/ImageGalleryItem';
 export default class ImageGallery extends Component {
  state = {
     images: [],
-    loading: false
+    loading: false,
+    error: null,
  }
     
     componentDidUpdate(prevProps, prevState) {
         const prevSearchImg = prevProps.searchImg;
         const nextSearchImg = this.props.searchImg;
-        if (prevSearchImg !== nextSearchImg) {
+        const prevPage = prevProps.Page;
+        const nextPage = this.props.Page;
+        if (prevSearchImg !== nextSearchImg ||
+            prevPage !== nextPage) {
             this.setState({loading: true})
-            setTimeout(()=>{
-                getImages(nextSearchImg)
+           
+                fetchImages(nextSearchImg)
                 .then(response=>{
-                    console.log(response.hits)
-                    this.setState({images: response.hits})
-                    console.log(this.state.images)
-    
-                })
+                    this.setState({images: response.hits})})
+                .catch(error=>this.setState({error}))
                 .finally(()=> this.setState({loading: false}))
-                }, 1000
-                )
+                
+                
             }
         }    
     
     render (){
-        const {images, loading} = this.state;
+        const {images, loading, error} = this.state;
         const {searchImg} = this.props;
         return ( 
-            <div>
+            <Gallery>
+                {error && <div>Change query</div>}
                 {loading && <div>Загружаем</div>}
                 {!searchImg && <div>Give me name</div>}
                 {images && 
-                    <div>
+                    <Gallery>
                         {images.map(({id, webformatURL, largeImageURL}) =>(
                             <ImageGalleryItem
                             key= {id}
@@ -47,9 +50,9 @@ export default class ImageGallery extends Component {
                             largeImage= {largeImageURL}
                             />      
                         ))}  
-                    </div>}
+                    </Gallery>}
    
-            </div>   
+            </Gallery>   
         )
     }
     

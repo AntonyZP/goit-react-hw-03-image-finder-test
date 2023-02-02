@@ -2,6 +2,7 @@
  import PropTypes from 'prop-types';
 //  import { toast } from 'react-toastify';
 import toast from 'react-hot-toast';
+import { Header, Searchform } from "./Searchbar.styled";
 
 
  export default class Searchbar extends Component {
@@ -30,8 +31,8 @@ import toast from 'react-hot-toast';
 
      render () {
         return (
-            <header className="searchbar" onSubmit={this.handleSubmit}>
-            <form className="form">
+            <Header className="searchbar" onSubmit={this.handleSubmit}>
+            <Searchform className="form">
               <button type="submit" className="button">
                 <span className="button-label">Search</span>
               </button>
@@ -45,8 +46,8 @@ import toast from 'react-hot-toast';
                 autoFocus
                 placeholder="Search images and photos"
               />
-            </form>
-          </header>  
+            </Searchform>
+          </Header>  
         )
      }
 
