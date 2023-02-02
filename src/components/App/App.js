@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import toast, { Toaster } from 'react-hot-toast';
-import getImages from 'components/Api';
+import fetchImages from 'components/Api';
 import Searchbar from "components/Searchbar";
 import ImageGallery from "components/ImageGallery";
 import Button from "components/Button";
@@ -19,7 +19,46 @@ export default class App extends Component {
     images: [],
     searchImg: '',
     page: 1,
+    loadMore: true,
+    loading: false,
+    error: null,
+
   };
+  
+  componentDidUpdate(_, prevState) {
+    const {searchImg, page, images, loadMore} = this.state
+    const prevSearchImg = prevState.searchImg;
+    const prevPage = prevState.page;
+    if (prevSearchImg !== searchImg 
+      || prevPage !== page
+      ) {
+        this.setState({loading: true});     
+            fetchImages(searchImg, page)
+            .then(response => {
+              console.log(response)
+              if (page !== prevPage) {
+                console.log("asdgasdg")
+                if (response.hits.length<80){
+                  console.log(response.hits.length)
+                  this.setState({
+                    
+                     loadMore: false,
+                  })
+                }
+                this.setState(prevState => ({
+                  images: [...prevState.images, ...response.hits],                    
+                }));
+              } else if 
+              (searchImg !== prevSearchImg) {
+                this.setState({
+                  images: response.hits,
+              });
+              }
+            })
+            .catch(error=>this.setState({error}))
+            .finally(()=> this.setState({loading: false}))          
+        }
+    }   
 
   handleFormSubmit = searchQuery => {
     this.setState({
@@ -31,31 +70,36 @@ export default class App extends Component {
 
   handleOnClickMoreButton = e => {
     e.preventDefault();
-    this.setState( prevState => ({
-    page: prevState.page + 1
-    })  )
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }))
+
   }
 
-
   render () {
-      return ( 
+    const {images, loading, error, searchImg, loadMore} = this.state;
     
-      <Wrapper>
-      <Searchbar onSubmit={this.handleFormSubmit}/>
+    return (       
+<Wrapper>
+  <Searchbar onSubmit={this.handleFormSubmit}/>
+    {error && <div>Change query</div>}
+    {loading && <div>Загружаем</div>}
+    {!searchImg && <div>Give me name</div>}
+    {images && 
+    <ImageGallery 
+      images={this.state.images} 
+    />}
 
-<ImageGallery 
-  images={this.state.images} 
-  searchImg={this.state.searchImg}
-  page = {this.state.page}
-/>
-
-<Button onClick = {this.handleOnClickMoreButton}>LoadMore</Button>
-
-<Toaster autoClose={3000}/>
-      </Wrapper>
-
-    
+    {images.length>0 &&
+      (<Button onClick = {this.handleOnClickMoreButton} onLoadMoreBtn={loadMore}>LoadMore</Button>
+)}
+    <Toaster autoClose={3000}/>
+</Wrapper>    
       );
     }
   }
  
+  //{} if (resp.data.hits.length < 40) {(
+     // "We're sorry, but you've reached the end of search results."
+    //  );
+   // loadMore.disabled = true;

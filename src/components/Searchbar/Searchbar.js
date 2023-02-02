@@ -12,14 +12,12 @@ import { Header, Searchform } from "./Searchbar.styled";
 
      handleSubmit = e =>{
         e.preventDefault();
-
         if (this.state.searchQuery.trim() === '') {
           toast.error('🦄 Wow so easy!');
           return;
         }
         this.props.onSubmit(this.state.searchQuery);
         this.setState({ searchQuery: '' });
-        console.log(this.state.searchQuery);
      }
     
 
