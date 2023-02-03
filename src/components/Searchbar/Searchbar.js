@@ -1,8 +1,7 @@
  import React, {Component} from "react";
  import PropTypes from 'prop-types';
-//  import { toast } from 'react-toastify';
 import toast from 'react-hot-toast';
-import { Header, Searchform } from "./Searchbar.styled";
+import { Header, SearchForm } from "./Searchbar.styled";
 
 
  export default class Searchbar extends Component {
@@ -13,14 +12,13 @@ import { Header, Searchform } from "./Searchbar.styled";
      handleSubmit = e =>{
         e.preventDefault();
         if (this.state.searchQuery.trim() === '') {
-          toast.error('🦄 Wow so easy!');
+          toast.error('Enter a request!');
           return;
         }
         this.props.onSubmit(this.state.searchQuery);
         this.setState({ searchQuery: '' });
      }
     
-
      handleChangeInput = e => {
         this.setState({
             searchQuery: e.target.value
@@ -29,12 +27,11 @@ import { Header, Searchform } from "./Searchbar.styled";
 
      render () {
         return (
-            <Header className="searchbar" onSubmit={this.handleSubmit}>
-            <Searchform className="form">
+            <Header onSubmit={this.handleSubmit}>
+            <SearchForm>
               <button type="submit" className="button">
                 <span className="button-label">Search</span>
-              </button>
-          
+              </button>          
               <input
                 className="input"
                 type="text"
@@ -44,7 +41,7 @@ import { Header, Searchform } from "./Searchbar.styled";
                 autoFocus
                 placeholder="Search images and photos"
               />
-            </Searchform>
+            </SearchForm>
           </Header>  
         )
      }

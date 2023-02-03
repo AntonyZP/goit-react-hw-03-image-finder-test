@@ -1,34 +1,36 @@
-import React from "react";
-import PropTypes from 'prop-types';
-import ContactListItem from 'components/ContactListItem';
+import React, { Component } from "react";
+import { createPortal } from "react-dom";
+import { Overlay, ModalWindow } from "./Modal.styled";
 
+const modalRoot = document.querySelector('#modal-root');
 
-const ContactList = ({ contacts, onDeleteContact }) => {
-  return (
-    <ul>
-      {contacts.map(({ name, number, id }) => (
-        <ContactListItem
-          key={id}
-          id={id}
-          name={name}
-          number={number}
-          onDeleteContact={onDeleteContact}
-        />
-      ))}
-    </ul>
-  );
-};
+export default class Modal extends Component {
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleKeyDown);
+  }
 
-export default ContactList;
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKeyDown)
 
+  }
 
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired,
-    }).isRequired
-  ).isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
-};
+  handleKeyDown = e =>{
+    if (e.code === 'Escape') {
+      this.props.onCloseModal()
+    }
+  }
+
+  handleBackdropClick = e => {
+    if (e.currentTarget === e.target) {
+      this.props.onCloseModal()
+    }
+  }
+  render() {
+    return createPortal(
+      <Overlay onClick={this.handleBackdropClick}>
+        <ModalWindow>{this.props.children}</ModalWindow>
+      </Overlay>,
+      modalRoot
+    );
+  }
+}

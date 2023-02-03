@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import fetchImages from 'components/Api';
 import Searchbar from "components/Searchbar";
 import ImageGallery from "components/ImageGallery";
 import Button from "components/Button";
-import { Wrapper } from './App.styled'
+import { Wrapper, Message, Image } from './App.styled'
+import { ThreeCircles } from "react-loader-spinner";
+import Modal from "components/Modal";
 
 
 // import { nanoid } from 'nanoid'
@@ -22,40 +24,40 @@ export default class App extends Component {
     loadMore: true,
     loading: false,
     error: null,
-
+    showModal: false,
+    modalUrl: null,
   };
   
   componentDidUpdate(_, prevState) {
-    const {searchImg, page, images, loadMore} = this.state
+    const {searchImg, page, images, loadMore, error} = this.state
     const prevSearchImg = prevState.searchImg;
     const prevPage = prevState.page;
+   
     if (prevSearchImg !== searchImg 
       || prevPage !== page
       ) {
         this.setState({loading: true});     
             fetchImages(searchImg, page)
             .then(response => {
-              console.log(response)
               if (page !== prevPage) {
-                console.log("asdgasdg")
-                if (response.hits.length<80){
-                  console.log(response.hits.length)
-                  this.setState({
-                    
-                     loadMore: false,
-                  })
+                if (response.hits.length<12){
+                  this.setState({loadMore: false})
                 }
                 this.setState(prevState => ({
                   images: [...prevState.images, ...response.hits],                    
                 }));
               } else if 
               (searchImg !== prevSearchImg) {
-                this.setState({
-                  images: response.hits,
-              });
+                this.setState({images: response.hits});
+                if (response.hits.length<12){
+                  this.setState({loadMore: false})
+                }
               }
             })
-            .catch(error=>this.setState({error}))
+            .catch(error=>this.setState({error: error}),
+            console.log(error),
+//toast.error('Nothing was found according to your request. Change request!')
+            )            
             .finally(()=> this.setState({loading: false}))          
         }
     }   
@@ -73,33 +75,44 @@ export default class App extends Component {
     this.setState(prevState => ({
       page: prevState.page + 1,
     }))
+  }
 
+  toggleModal = ()=> {
+    this.setState(({showModal}) =>({
+      showModal: !showModal,
+    }))
+  }
+
+  openModal = largeImage => {
+    this.setState({modalUrl: largeImage});
+    console.log('open')
+    this.toggleModal();
   }
 
   render () {
-    const {images, loading, error, searchImg, loadMore} = this.state;
+    const {images, loading, error, searchImg, loadMore, showModal, modalUrl} = this.state;
     
     return (       
 <Wrapper>
   <Searchbar onSubmit={this.handleFormSubmit}/>
-    {error && <div>Change query</div>}
-    {loading && <div>Загружаем</div>}
-    {!searchImg && <div>Give me name</div>}
-    {images && 
-    <ImageGallery 
+    {error && <h1>Change query</h1>}
+    {loading && <ThreeCircles/>}
+    {!searchImg && <Message>Enter a request</Message>}
+    {images && <ImageGallery 
       images={this.state.images} 
-    />}
-
+      onClickImage ={this.openModal}/>}
+    {showModal && (
+      <Modal onCloseModal={this.toggleModal}>
+        <Image src={modalUrl} alt='large'></Image>
+      </Modal>
+    )}
     {images.length>0 &&
       (<Button onClick = {this.handleOnClickMoreButton} onLoadMoreBtn={loadMore}>LoadMore</Button>
-)}
-    <Toaster autoClose={3000}/>
+    )}
+   
 </Wrapper>    
       );
     }
   }
  
-  //{} if (resp.data.hits.length < 40) {(
-     // "We're sorry, but you've reached the end of search results."
-    //  );
-   // loadMore.disabled = true;
+   /* <Toaster autoClose={3000}/> */
