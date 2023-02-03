@@ -10,7 +10,7 @@ const ImageGallery = ({images, onClickImage}) =>{
                 <ImageGalleryItem
                 key= {id}
                 smallImage= {webformatURL}
-                largeImage= {largeImageURL}
+                largeImageURL= {largeImageURL}
                 onClickImage= {onClickImage}
                 />      
             ))}  
@@ -20,3 +20,7 @@ const ImageGallery = ({images, onClickImage}) =>{
 
 export default ImageGallery;
 
+ImageGallery.propTypes = {
+    images: PropTypes.arrayOf(PropTypes.object).isRequired,
+    onClickImage: PropTypes.func.isRequired,
+  };

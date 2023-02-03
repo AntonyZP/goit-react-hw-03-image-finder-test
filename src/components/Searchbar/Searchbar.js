@@ -1,13 +1,19 @@
  import React, {Component} from "react";
  import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
-import { Header, SearchForm } from "./Searchbar.styled";
+import { FcSearch } from 'react-icons/fc';
+import { IconContext } from "react-icons";
+import { Header, SearchForm, SearchFormButton, SearchFormInput } from "./Searchbar.styled";
 
 
  export default class Searchbar extends Component {
     state ={
         searchQuery: '',
      }
+
+     static propTypes = {
+      onSubmit: PropTypes.func.isRequired,
+    };
 
      handleSubmit = e =>{
         e.preventDefault();
@@ -27,13 +33,16 @@ import { Header, SearchForm } from "./Searchbar.styled";
 
      render () {
         return (
-            <Header onSubmit={this.handleSubmit}>
+          <Header onSubmit={this.handleSubmit}>
             <SearchForm>
-              <button type="submit" className="button">
-                <span className="button-label">Search</span>
-              </button>          
-              <input
-                className="input"
+              <SearchFormButton type="submit">
+              <IconContext.Provider value={{ size: '3em', color: "blue", }}>
+                <div>
+                <FcSearch/>
+                </div>
+              </IconContext.Provider>              
+              </SearchFormButton>          
+              <SearchFormInput
                 type="text"
                 value={this.state.name}
                 onChange={this.handleChangeInput}

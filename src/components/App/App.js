@@ -8,14 +8,6 @@ import { Wrapper, Message, Image } from './App.styled'
 import { ThreeCircles } from "react-loader-spinner";
 import Modal from "components/Modal";
 
-
-// import { nanoid } from 'nanoid'
-// import ContactList from 'components/ContactList';
-// import ContactForm from 'components/ContactForm';
-// import Filter from 'components/Filter';
-
-
-
 export default class App extends Component {
   state ={
     images: [],
@@ -55,8 +47,6 @@ export default class App extends Component {
               }
             })
             .catch(error=>this.setState({error: error}),
-            console.log(error),
-//toast.error('Nothing was found according to your request. Change request!')
             )            
             .finally(()=> this.setState({loading: false}))          
         }
@@ -83,9 +73,11 @@ export default class App extends Component {
     }))
   }
 
-  openModal = largeImage => {
-    this.setState({modalUrl: largeImage});
-    console.log('open')
+  openModal = largeImageURL => {
+    this.setState({modalUrl: largeImageURL});
+    console.log(largeImageURL)
+    console.log(this.state.modalUrl)
+
     this.toggleModal();
   }
 
