@@ -1,6 +1,6 @@
  import React, {Component} from "react";
  import PropTypes from 'prop-types';
-import toast from 'react-hot-toast';
+import toast, {Toaster} from 'react-hot-toast';
 import { FcSearch } from 'react-icons/fc';
 import { IconContext } from "react-icons";
 import { Header, SearchForm, SearchFormButton, SearchFormInput } from "./Searchbar.styled";
@@ -51,6 +51,7 @@ import { Header, SearchForm, SearchFormButton, SearchFormInput } from "./Searchb
                 placeholder="Search images and photos"
               />
             </SearchForm>
+            <Toaster/>
           </Header>  
         )
      }
