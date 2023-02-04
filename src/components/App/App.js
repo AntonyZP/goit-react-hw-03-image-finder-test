@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import toast from 'react-hot-toast';
 import fetchImages from 'components/Api';
 import Searchbar from "components/Searchbar";
 import ImageGallery from "components/ImageGallery";
@@ -21,7 +20,7 @@ export default class App extends Component {
   };
   
   componentDidUpdate(_, prevState) {
-    const {searchImg, page, images, loadMore, error} = this.state
+    const {searchImg, page} = this.state
     const prevSearchImg = prevState.searchImg;
     const prevPage = prevState.page;
    
