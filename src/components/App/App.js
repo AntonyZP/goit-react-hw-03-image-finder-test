@@ -74,9 +74,6 @@ export default class App extends Component {
 
   openModal = largeImageURL => {
     this.setState({modalUrl: largeImageURL});
-    console.log(largeImageURL)
-    console.log(this.state.modalUrl)
-
     this.toggleModal();
   }
 
